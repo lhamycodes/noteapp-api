@@ -24,8 +24,8 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('login', 'API\AuthController@login');
     Route::post('register', 'API\AuthController@register');
 
-    Route::post('verify', 'Auth\VerificationController@index');
-    Route::post('resend_code', 'Auth\VerificationController@resend_code');
+    // Route::post('verify', 'Auth\VerificationController@index');
+    // Route::post('resend_code', 'Auth\VerificationController@resend_code');
 
     Route::post('password/email', 'Auth\ResetPasswordController@sendEmail');
     Route::post('password/reset', 'Auth\ResetPasswordController@resetPassword');
