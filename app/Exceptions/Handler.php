@@ -100,7 +100,7 @@ class Handler extends ExceptionHandler
             ];
         }
 
-        return $request->expectsJson()
+        return !$request->expectsJson()
             ? $rendered
             : response()->json(Json::response($output['status'], $output['data'], $output['message']), $output['status']);
     }
