@@ -5,6 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Notes;
 use Illuminate\Http\Request;
+use App\Http\Resources\Notes as NotesResource;
+use App\Transformers\Json;
+use Illuminate\Support\Str;
 
 class NotesController extends Controller
 {
@@ -15,7 +18,10 @@ class NotesController extends Controller
      */
     public function index()
     {
-        
+        $notes = Notes::where(['user_id' => auth()->user()->id])->orderByDesc('id')->paginate(5);
+
+        // Return collection of notes as a resource
+        return NotesResource::collection($notes);
     }
 
     /**
@@ -26,7 +32,26 @@ class NotesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = $this->validate($request, [
+            'title' => 'required',
+            'description' => 'required',
+        ]);
+
+        if (!$validator) {
+            return response()->json(Json::response(422, ['error' => $validator->errors()], "Validation failed"), 422);
+        } else {
+            $createNote = Notes::create(array_merge(
+                [
+                    'uuid' => Str::orderedUuid(),
+                    'user_id' => auth()->user()->id,
+                ],
+                $request->only('title', 'description')
+            ));
+
+            if($createNote){
+                
+            }
+        }
     }
 
     /**

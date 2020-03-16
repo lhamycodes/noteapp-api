@@ -36,11 +36,11 @@ class AuthController extends Controller
         }
 
         if ($token = JWTAuth::attempt($credentials)) {
-            if (auth()->user()->email_token) {
-                //logout the user
-                // auth()->logout();
-                return response()->json(Json::response(400, [], "Your Account has not been verified. Please follow the link in the mail that was sent to you"), 400);
-            }
+            // if (auth()->user()->email_token) {
+            //     //logout the user
+            //     // auth()->logout();
+            //     return response()->json(Json::response(400, [], "Your Account has not been verified. Please follow the link in the mail that was sent to you"), 400);
+            // }
 
             return response()->json(Json::response(200, User::authUser($token), "Login successful"), 200);
         } else {
@@ -51,10 +51,9 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $rules = [
-            'fullname' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'required|string|max:11',
-            'password' => 'required|string|max:255|same:password_confirmation',
+            'password' => 'required|string|max:255',
         ];
 
         $validator = $this->validate($request, $rules);
@@ -69,11 +68,10 @@ class AuthController extends Controller
             //Create user
             $user = User::create([
                 'uuid' => Str::orderedUuid(),
-                'fullname' => $request->fullname,
+                'name' => $request->fullname,
                 'email' => $request->email,
-                'phone' => $request->phone,
                 'password' => $request->password,
-                'email_token' => generate_random_str(6),
+                'email_verified_at' => Carbon::now(),
             ]);
 
             $user->assignRole('user');
@@ -85,7 +83,7 @@ class AuthController extends Controller
         }
 
         if ($user) {
-            $user->notify(new WelcomeNotification($user));
+            // $user->notify(new WelcomeNotification($user));
 
             $credentials = $request->only('email', 'password');
 
@@ -108,8 +106,10 @@ class AuthController extends Controller
     {
         $token = JWTAuth::getToken();
         $new_token = JWTAuth::refresh($token);
-        return response()->json(Json::response(200, [
-            "token" => $new_token,
-        ], "Token refreshed successfully"), 200);
+        if ($new_token) {
+            return response()->json(Json::response(200, [
+                "token" => $new_token,
+            ], "Token refreshed successfully"), 200);
+        }
     }
 }
