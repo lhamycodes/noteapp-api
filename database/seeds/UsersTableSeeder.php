@@ -23,8 +23,6 @@ class UsersTableSeeder extends Seeder
             'email_verified_at' => Carbon::now(),
         ]);
 
-        $role = Role::where('name', 'super-admin')->first();
-
-        $user->assignRole('super-admin');
+        $user->assignRole('admin');
     }
 }
