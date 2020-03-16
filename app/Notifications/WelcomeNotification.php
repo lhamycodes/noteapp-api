@@ -43,10 +43,10 @@ class WelcomeNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Trade With kene')
-            ->from('hello@tradewithkene.com', 'Trade With Kene')
+            ->subject('Notes app')
+            ->from('hello@notesappp.com', 'Notes app')
             ->line("Hello, ".$this->user->fullname)
-            ->line('Welcome to Trade with Kene!')
+            ->line('Welcome to Notes app!')
             ->line("You'd need to verify your account to continue")
             ->line("Copy this CODE : ".$this->user->email_token)
             ->action('Verify Account', url('/'))

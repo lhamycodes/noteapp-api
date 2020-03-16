@@ -45,7 +45,7 @@ class SendResetLinkEmail extends Notification
     {
         return (new MailMessage)
             ->subject('Password Reset')
-            ->from('hello@tradewithkene.com', 'Trade With Kene')
+            ->from('hello@notesapp.com', 'Trade With Kene')
             ->line("Hello, ".$this->user->fullname)
             ->line('You requested a password reset')
             ->line("Click on the below link to reset your password")
