@@ -72,16 +72,16 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function subscription()
+    public function notes()
     {
-        return $this->hasOne('App\Subscription', 'user_id', 'id');
+        return $this->hasMany('App\Notes', 'user_id', 'id');
     }
 
     public static function authUser($token)
     {
         $baseArray = [
             'role' => auth()->user()->roles->pluck('name'),
-            "user" => User::where('id', Auth::user()->id)->with('subscription')->first(),
+            "user" => User::where('id', Auth::user()->id)->with('notes')->first(),
         ];
         return $token == null ? $baseArray : array_merge(['token' => $token], $baseArray);
     }

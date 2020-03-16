@@ -18,7 +18,7 @@ class UsersTableSeeder extends Seeder
         $user = User::create([
             'uuid' => Str::orderedUuid(),
             'fullname' => 'Super Admin',
-            'email' => 'superadmin@tradewithkene.com',
+            'email' => 'superadmin@notesapp.com',
             'password' => '12345678',
             'email_verified_at' => Carbon::now(),
         ]);
