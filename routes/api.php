@@ -36,5 +36,7 @@ Route::group(['prefix' => 'auth'], function () {
 Route::group(['middleware' => 'jwt.auth'], function () {
     Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () { });
 
-    Route::group(['prefix' => 'user', 'middleware' => ['role:user']], function () { });
+    Route::group(['middleware' => ['role:user']], function () {
+        Route::apiResource('notes', 'API\NotesController');
+    });
 });
