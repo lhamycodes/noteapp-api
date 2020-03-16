@@ -40,7 +40,7 @@ class NotesController extends Controller
         if (!$validator) {
             return response()->json(Json::response(422, ['error' => $validator->errors()], "Validation failed"), 422);
         } else {
-            $createNote = Notes::create(array_merge(
+            $note = Notes::create(array_merge(
                 [
                     'uuid' => Str::orderedUuid(),
                     'user_id' => auth()->user()->id,
@@ -48,8 +48,10 @@ class NotesController extends Controller
                 $request->only('title', 'description')
             ));
 
-            if($createNote){
-                
+            if ($note) {
+                return response()->json(Json::response(200, ['note' => $note], "Note created Succcessfully"), 200);
+            } else {
+                return response()->json(Json::response(400, [], "Couldn't create note"), 400);
             }
         }
     }
@@ -61,9 +63,7 @@ class NotesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Notes $notes)
-    {
-        //
-    }
+    { }
 
     /**
      * Update the specified resource in storage.
@@ -72,9 +72,19 @@ class NotesController extends Controller
      * @param  \App\Notes  $notes
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Notes $notes)
+    public function update($uuid, Request $request)
     {
-        //
+        $note = Notes::where('uuid', $uuid)->first();
+        if ($note) {
+            if ($note->user_id == auth()->user()->id) {
+                $note->update($request->only('title', 'description'));
+                return response()->json(Json::response(200, ['note' => $note], "Note updated Succcessfully"), 200);
+            } else {
+                return response()->json(Json::response(403, ['note' => $note], "Unauthorized access to note"), 403);
+            }
+        } else {
+            return response()->json(Json::response(400, [], "Couldn't find note"), 400);
+        }
     }
 
     /**
@@ -83,8 +93,18 @@ class NotesController extends Controller
      * @param  \App\Notes  $notes
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Notes $notes)
+    public function destroy($uuid)
     {
-        //
+        $note = Notes::where('uuid', $uuid)->first();
+        if ($note) {
+            if ($note->user_id == auth()->user()->id) {
+                $note->delete();
+                return response()->json(Json::response(200, ['note' => $note], "Note updated Succcessfully"), 200);
+            } else {
+                return response()->json(Json::response(403, ['note' => $note], "Unauthorized access to note"), 403);
+            }
+        } else {
+            return response()->json(Json::response(400, [], "Couldn't find note"), 400);
+        }
     }
 }

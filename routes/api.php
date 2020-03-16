@@ -37,6 +37,12 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () { });
 
     Route::group(['middleware' => ['role:user']], function () {
-        Route::apiResource('notes', 'API\NotesController');
+        Route::apiResource('notes', 'API\NotesController')->except('show', 'update', 'destroy');
+
+        Route::group(['prefix' => 'notes'], function () {
+            Route::put('{uuid}', 'API\NotesController@update');
+
+            Route::delete('{uuid}', 'API\NotesController@destroy');
+        });
     });
 });
