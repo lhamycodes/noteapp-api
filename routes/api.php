@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 Route::get('/', function () {
     return [
-        'app' => 'Laravel API Starter',
+        'app' => 'Note App API',
         'version' => '1.0.0',
     ];
 });
