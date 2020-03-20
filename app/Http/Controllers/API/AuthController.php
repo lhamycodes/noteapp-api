@@ -73,7 +73,7 @@ class AuthController extends Controller
             //Create user
             $user = User::create([
                 'uuid' => Str::orderedUuid(),
-                'name' => $request->fullname,
+                'name' => $request->name,
                 'email' => $request->email,
                 'password' => $request->password,
                 'email_verified_at' => Carbon::now(),
