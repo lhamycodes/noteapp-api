@@ -42,7 +42,12 @@ class AuthController extends Controller
             //     return response()->json(Json::response(400, [], "Your Account has not been verified. Please follow the link in the mail that was sent to you"), 400);
             // }
 
-            return response()->json(Json::response(200, User::authUser($token), "Login successful"), 200);
+            $tokenData = [
+                'access_token' => $token,
+                'expires_at' => Carbon::now()->addMinutes(auth()->factory()->getTTL() * 60),
+            ];
+
+            return response()->json(Json::response(200, User::authUser($tokenData), "Login successful"), 200);
         } else {
             return response()->json(Json::response(401, [], "Invalid login details"), 401);
         }
@@ -88,7 +93,11 @@ class AuthController extends Controller
             $credentials = $request->only('email', 'password');
 
             if ($token = JWTAuth::attempt($credentials)) {
-                return response()->json(Json::response(200, User::authUser($token), "Registration Succcessful"), 200);
+                $tokenData = [
+                    'access_token' => $token,
+                    'expires_at' => Carbon::now()->addMinutes(auth()->factory()->getTTL() * 60),
+                ];
+                return response()->json(Json::response(200, User::authUser($tokenData), "Registration Succcessful"), 200);
             } else {
                 return response()->json(Json::response(401, [], "Invalid login details"), 401);
             }
