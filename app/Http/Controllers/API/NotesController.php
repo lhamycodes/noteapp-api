@@ -17,7 +17,7 @@ class NotesController extends Controller
      */
     public function index()
     {
-        $notes = Notes::where(['user_id' => auth()->user()->id])->orderByDesc('id');
+        $notes = Notes::where(['user_id' => auth()->user()->id])->orderByDesc('id')->get();
 
         return response()->json(Json::response(200, ['notes' => $notes], "All Notes"), 200);
     }
