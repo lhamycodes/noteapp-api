@@ -97,7 +97,7 @@ class NotesController extends Controller
         if ($note) {
             if ($note->user_id == auth()->user()->id) {
                 $note->delete();
-                return response()->json(Json::response(200, ['note' => $note], "Note updated Succcessfully"), 200);
+                return response()->json(Json::response(200, ['note' => $note], "Note deleted Succcessfully"), 200);
             } else {
                 return response()->json(Json::response(403, ['note' => $note], "Unauthorized access to note"), 403);
             }
