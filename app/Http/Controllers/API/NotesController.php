@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Notes;
 use Illuminate\Http\Request;
-use App\Http\Resources\Notes as NotesResource;
 use App\Transformers\Json;
 use Illuminate\Support\Str;
 
@@ -18,10 +17,9 @@ class NotesController extends Controller
      */
     public function index()
     {
-        $notes = Notes::where(['user_id' => auth()->user()->id])->orderByDesc('id')->paginate(5);
+        $notes = Notes::where(['user_id' => auth()->user()->id])->orderByDesc('id');
 
-        // Return collection of notes as a resource
-        return NotesResource::collection($notes);
+        return response()->json(Json::response(200, ['notes' => $notes], "All Notes"), 200);
     }
 
     /**
